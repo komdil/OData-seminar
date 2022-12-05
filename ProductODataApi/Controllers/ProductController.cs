@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using ProductAPI.Abstractions;
 using ProductAPI.Model;
 
@@ -6,7 +8,7 @@ namespace ProductAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductController : ODataController
     {
         private readonly IApplicationDbContext _applicationDbContext;
 
@@ -15,16 +17,11 @@ namespace ProductAPI.Controllers
             _applicationDbContext = applicationDbContext;
         }
 
+        [EnableQuery]
         [HttpGet]
         public IEnumerable<Laptop> Get()
         {
             return _applicationDbContext.Laptops;
-        }
-
-        [HttpGet("manufacturer")]
-        public IEnumerable<Laptop> GetByManufacturer(string manufacturer)
-        {
-            return _applicationDbContext.Laptops.Where(s => s.Manufacturer.ToLower() == manufacturer.ToLower());
         }
     }
 }
